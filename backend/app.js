@@ -50,6 +50,10 @@ app.get('/api/health', (req, res) => {
     uptime: Math.floor(process.uptime()) + 's',
   });
 });
+app.get('/', (req, res) => {
+  res.redirect('/api/cities');
+});
+
 
 // ─── 404 Handler ────────────────────────────────────────────────────────────
 app.use((req, res) => {
