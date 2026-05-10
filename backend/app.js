@@ -12,11 +12,26 @@ const app = express();
 // ─── Security Middleware ────────────────────────────────────────────────────
 app.use(helmet());
 
+// app.use(cors({
+//   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+//   methods: ['GET', 'POST'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   credentials: true,
+// }));
+const allowedOrigins = [
+  'https://cityinsights-amber.vercel.app',
+  'https://cityinsights-amber.vercel.app/' // Cover both cases
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200
 }));
 
 // Rate limiting: 200 requests per 15 minutes per IP
